@@ -48,5 +48,8 @@ function shuffleCards(array){
 	return array;
 }
 
+shuffleCards(mainDeck);
+console.log("The cards have been shuffled.");
+
 //Define two arrays to represent two players seperate deck of cards
 //that they will use for the game.
