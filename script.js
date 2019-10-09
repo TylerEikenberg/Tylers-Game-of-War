@@ -53,3 +53,6 @@ console.log("The cards have been shuffled.");
 
 //Define two arrays to represent two players seperate deck of cards
 //that they will use for the game.
+
+let playerOneDeck = mainDeck.slice(0,26);
+let playerTwoDeck = mainDeck.slice(26,53);
