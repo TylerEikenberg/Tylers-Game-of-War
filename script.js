@@ -52,15 +52,31 @@ const setupGame = () => {
 					13,13,13,13,
 					14,14,14,14];
 
+	
+/*	The following code block 
+	delays code for a few seconds 
+	then shuffles the cards
+	using the shuffleCard function 
+	passing the mainDeck as the parameter.*/
+	console.log("Shuffling cards");
+	setTimeout(function(){
+         console.log(".")},1000);
+	setTimeout(function(){
+         console.log(".")},2000);
+	setTimeout(function(){
+         console.log(".")},3000);
 	shuffleCards(mainDeck);
-	console.log("The cards have been shuffled.");
+	setTimeout(function(){
+         console.log("The cards have been shuffled")},4000);
+
+	
 
 /*	Returning initial game with two randomized hands. 
 	Current phase is draw.*/
 	return {
 		playerOne: mainDeck.slice(0,26),
 		playerTwo: mainDeck.slice(26,53),
-		currentState: 'draw',
+		currentState: 'drawingCards',
 		winner: null
 	};
 
@@ -69,18 +85,21 @@ const setupGame = () => {
 	//Game begins
 let gameState = setupGame();
 
-//While game has no winner this while loop will run
-//If case is draw initiate draw function
-//if case is waiting initiate waiting function
-//if there is a winner exit loop
+
+/* 
+While game has no winner this while loop will run
+If case is draw initiate draw function
+if case is waiting initiate waiting function
+if there is a winner exit loop
+*/
 while(!gameState.winner){
 	console.log(gameState);
 	switch(gameState.currentState){
-		case 'draw':
+		case 'drawingCards':
 		console.log("Drawing cards")
 		 // do something to draw cards
 		 // gameState = drawCards(gameState);
-		 setTimeout(() => {gameState.currentState = 'waiting';}, 10000)
+		 setTimeout(function(){gameState.currentState = 'waiting'}, 5000);
 		 break;
 	 	case 'waiting':
 		 // show please hit enter
@@ -88,7 +107,7 @@ while(!gameState.winner){
 		 //window.addEventListener('keydown', e => { 
 		 //	
 		 //})
-		 gameState.currentState = 'draw';
+		 gameState.currentState = 'drawingCards';
 		 break;
 		 case 'winner': true;
 		 default:
