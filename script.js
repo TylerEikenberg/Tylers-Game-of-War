@@ -128,6 +128,14 @@ while(!gameState.winner){
 	}
 }
 
+/*
+	The compareCards function takes one card from each players decks
+	and sets them into the variables p1card and p2card. Then, using an if else if 
+	statement, the values of p1card and p2card are compared. 
+	If a players card value if larger then the others then both cards are pushed
+	into the winning players array of cards.
+ */
+const compareCards = () => {
 let p1card = gameState.playerOne.shift();
 let p2card = gameState.playerTwo.shift();
 
@@ -138,7 +146,23 @@ if(p1card > p2card){
 }else if (p1card === p2card){
 	gameState.currentState = 'war';
 }
+}
 
+const beginWar = () => {
+	/*	
+	 Create a new array spoilsOfWar that will hold previous cards
+	in play, and one new card from playerOne deck and playerTwo deck
+	*/	
+	let spoilsOfWar = [];
+	spoilsOfWar.push(compareCards.p1card, compareCards.p2card);
+	spoilsOfWar.push(gameState.playerOne.shift(), gameState.playerTwo.shift());
+
+	/*
+		Call compareCards() to then compare one new card pulled from
+		the decks of playerOne and playerTwo
+	 */
+	compareCards();
+}
 /* 
 The drawingCards state of the game will shift 1 card out of 
 both players arrays and into a new array cardsInPlay. 
