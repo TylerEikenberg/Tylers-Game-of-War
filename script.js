@@ -81,7 +81,7 @@ const setupGame = () => {
 	return {
 		playerOne: mainDeck.slice(0,26),
 		playerTwo: mainDeck.slice(26,53),
-		currentState: 'drawingCards',
+		currentState: 'winner',
 		winner: null
 	};
 
@@ -99,14 +99,24 @@ if there is a winner exit loop
 */
 while(!gameState.winner){
 	switch(gameState.currentState){
+/*		 call drawingCards function to remove the first
+		 card from each players decks and
+		 places it into the field of play
+		 gameState = drawingCards(gameState);*/
 		case 'drawingCards':
 		console.log("Drawing cards");
-		 // do something to draw cards
-		 // gameState = drawCards(gameState);
 		 break;
+
+/*		 call waiting function to wait for user to hit
+		 enter key before drawing the next set of cards.
+		 gameState = waiting(gameState)*/
 	 	case 'waiting':
-		 // show please hit enter
-		 window.alert('hello');
+/*		 show "Hit enter to continue"  
+		 and prompt user to hit the enter key. */
+		 console.log("Hit enter to continue")
+		 process.stdin.setRawMode(true);
+			process.stdin.resume();
+			process.stdin.on("data", process.exit.bind(process, 0));
 		 //window.addEventListener('keydown', e => { 
 		 //	
 		 //})
@@ -117,3 +127,28 @@ while(!gameState.winner){
 		 break;
 	}
 }
+
+let p1card = gameState.playerOne.shift();
+let p2card = gameState.playerTwo.shift();
+
+if(p1card > p2card){
+	gameState.playerOne.push(p1card, p2card);
+}else if(p1card < p2card){
+	gameState.playerTwo.push(p1card, p2card);
+}else if (p1card === p2card){
+	gameState.currentState = 'war';
+}
+
+/* 
+The drawingCards state of the game will shift 1 card out of 
+both players arrays and into a new array cardsInPlay. 
+*/
+/*
+The cardsInPlay array will only ever hold two values:
+The card from Player1 and the card from Player2
+ */
+/*
+Function compareCards will take an array as a parameter and
+compare the two cards. After the cards are compared either a winner
+is decided or War begins.
+ */
