@@ -47,7 +47,7 @@ class Deck{
 	}
   createDeck(){
     let suit = ["hearts", "spades", "clubs", "diamonds"]
-		let rank = ["two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "Jack", "King", "Queen", "Ace"]
+		let rank = ["Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "King", "Queen", "Ace"]
 		let score = [2,3,4,5,6,7,8,9,10,11,12,13,14]
     for(let i = 0, j = 0, k = 0; i < 52; i++){
       if(j === 13){
@@ -114,9 +114,10 @@ const beginWar = (state) => {
 	 Create a new array spoilsOfWar that will hold previous cards
 	in play, and one new card from playerOne deck and playerTwo deck
 	*/	
+	
 	let spoilsOfWar = [];
-	spoilsOfWar.push(compareCards.p1card, compareCards.p2card);
-	spoilsOfWar.push(gameState.playerOne.shift(), gameState.playerTwo.shift());
+	spoilsOfWar.push(state.p1card, state.p2card);
+	spoilsOfWar.push(state.playerOne.shift(), state.playerTwo.shift());
 
 	/*
 		Call compareCards() to then compare one new card pulled from
@@ -136,24 +137,30 @@ const beginWar = (state) => {
 const compareCards = (state) => {
 let p1card = state.playerOne.shift();
 let p2card = state.playerTwo.shift();
+state.currentState = state;
    // let p1card = new Card("Diamonds", "Two", 2)
    // let p2card = new Card("Diamonds", "Two", 2)
-console.log(p1card,p2card)
+console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
+
+console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
+
 
 //if playerOne wins
 if(p1card.score > p2card.score){
 	console.log("Player One Wins!")
 	state.playerOne.push(p1card, p2card);
+	state.playerOne.push(state.beginWar.spoilsOfWar)
 	state.currentState = 'waiting';
 //if playerTwo wins
 }else if(p1card.score < p2card.score){
 	console.log("Player Two Wins")
 	state.playerTwo.push(p1card, p2card);
+	state.playerTwo.push(state.beginWar.spoilsOfWar)
 	state.currentState = 'waiting';
 //if there is a tie
 }else if (p1card.score === p2card.score){
 	console.log("War!")
-	// beginWar();
+	beginWar(state);
 	state.currentState = 'waiting';
 }
 return state;
@@ -170,23 +177,25 @@ If case is draw initiate draw function
 if case is waiting initiate waiting function
 if there is a winner exit loop
 */
+
 let winner = null;
 while(!gameState.winner){
 	switch(gameState.currentState){
-/*		 call drawingCards function to remove the first
-		 card from each players decks and
-		 places it into the field of play
-		 gameState = drawingCards(gameState);*/
+		 // call drawingCards function to remove the first
+		 // card from each players decks and
+		 // places it into the field of play
+		 // gameState = drawingCards(gameState);
 
 		 // Game phase
 		case 'drawingCards':
 			console.log("Drawing cards");
-			gameState = compareCards(gameState);
-			// debugger;
-		 break;
+
+			compareCards(gameState);
+			gameState.currentState = 'waiting';
+		break;
 		 // call waiting function to wait for user to hit
 		 // enter key before drawing the next set of cards.
-		 // gameState = waiting(gameState)
+		 
 
 		// Checking winner phase
 	 	case 'waiting':
@@ -194,16 +203,17 @@ while(!gameState.winner){
 	*/
 		 	if(gameState.playerOne.length === 0 || gameState.playerTwo.length === 0){
 		 		winner = true;
+		 		gameState.currentState = 'winner'
 		 	}else{
 			 winner = false;
+			 gameState.currentState = 'drawingCards'
 			}
-			 gameState.currentState = winner ? 'winner' : 'drawingCards';
+			 
 			 
 		 break;
 
 		 // Terminating condition
 		 case 'winner':
-		 	// TODO figure out who the actual winner is
 		 	if(gameState.playerOne.length === 0){
 		 		gameState.winner = 'playerOne';
 		 	window.alert(`${gameState.playerTwo} wins!`)
