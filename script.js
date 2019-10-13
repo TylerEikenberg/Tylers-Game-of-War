@@ -86,7 +86,8 @@ const setupGame = () => {
 	/*	
 	Returning initial game with two randomized hands;
 	one for each player. 
-	Current phase is draw.
+	Current phase is drawingCards.
+	Initialize spoilsOfWar array that will hold cards during war
 	*/
 	return {
 		playerOne: mainDeck.cards.slice(0,26),
@@ -99,15 +100,24 @@ const setupGame = () => {
 
 }
 
+
+/**
+ * beginWar takes 3 parameters. The original cards the both players played in
+ * the round before war began, and the current game state.
+ * beginWar compares one new card from each players deck and
+ * determines a winner. The winner then takes the entire array spoilsOfWar 
+ * 
+ */
 const beginWar = (originalp1card, originalp2card, state) => {
-	/*	
-	 Create a new array spoilsOfWar that will hold previous cards
-	in play, and one new card from playerOne deck and playerTwo deck
-	*/	
+
 	
 	const player1WarPile = state.playerOne.splice(0, state.warDrawAmount + 1);
 	const player2WarPile = state.playerTwo.splice(0, state.warDrawAmount + 1);
 	
+	/*	
+	 Create a new array spoilsOfWar that will hold previous cards
+	in play, and one new card from playerOne deck and playerTwo deck
+	*/	
 	state.spoilsOfWar = [
 		...state.spoilsOfWar,	 
 		...player1WarPile, 
@@ -122,8 +132,6 @@ const beginWar = (originalp1card, originalp2card, state) => {
 		state.spoilsOfWar.push(originalp2card);
 	}
 
-	// Random the spoils to avoid long runs
-	 shuffleCards(state.spoilsOfWar);
 
 	let p1card = player1WarPile[player1WarPile.length - 1];
 	let p2card = player2WarPile[player2WarPile.length - 1];
@@ -139,12 +147,12 @@ const beginWar = (originalp1card, originalp2card, state) => {
 	}
 	if (p1card.score > p2card.score){
 		console.log("WAR - Player One Wins!")
-		state.playerOne = state.playerOne.concat(state.spoilsOfWar);
+		state.playerOne = state.playerOne.concat((state.playerOne.length -1), state.spoilsOfWar);
 		state.spoilsOfWar = [];
 	//if playerTwo wins
 	} else if (p1card.score < p2card.score){
 		console.log("WAR - Player Two Wins")
-		state.playerTwo = state.playerTwo.concat(state.spoilsOfWar);
+		state.playerTwo = state.playerTwo.concat((state.playerTwo.length -1), state.spoilsOfWar);
 		state.spoilsOfWar = [];
 	//if there is a tie
 	} else if (p1card.score === p2card.score){
@@ -201,7 +209,7 @@ if there is a winner exit loop
 */
 
 let runs = 0;
-const MAX_RUNS = 10000;
+const MAX_RUNS = 1000;
 
 while(!gameState.winner && runs <= MAX_RUNS){
 	switch(gameState.currentState){
@@ -233,7 +241,7 @@ while(!gameState.winner && runs <= MAX_RUNS){
  	runs++;
  }
 if(!gameState.winner){
-	window.alert(`After 10,000 games nobody wins!`)
+	window.alert(`After 1,000 games nobody wins!`)
 }else(window.alert(`${gameState.winner} wins!`))
 
 
