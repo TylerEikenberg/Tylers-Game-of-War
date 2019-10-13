@@ -25,4 +25,4 @@ are added to a new array __spoilsOfWar__ that will hold all of the cards that th
 totaling *six* cards in the array. Then a card from each player is compared again to determine a winner.  If there is another tie, __war__ begins again until a winner is determined. 
 
 ![img title](images/consolescreen.png) 
-![img title](images/consolescreen2.png) 
+![img title](images/consolescreentwo.png) 
