@@ -1,2 +1,2 @@
-# Tylers-Game-of-War
-Card game War coded in JavaScript
+# Tyler's Game of War
+For this project we were required to replicate the card game __War__ using JavaScript.
