@@ -110,8 +110,8 @@ const beginWar = (originalp1card, originalp2card, state) => {
 	
 	state.spoilsOfWar = [
 		...state.spoilsOfWar,	 
-		...player2WarPile, 
-		...player1WarPile,
+		...player1WarPile, 
+		...player2WarPile,
 	];
 
 	if(originalp1card){
@@ -123,7 +123,7 @@ const beginWar = (originalp1card, originalp2card, state) => {
 	}
 
 	// Random the spoils to avoid long runs
-	// shuffleCards(state.spoilsOfWar);
+	 shuffleCards(state.spoilsOfWar);
 
 	let p1card = player1WarPile[player1WarPile.length - 1];
 	let p2card = player2WarPile[player2WarPile.length - 1];
