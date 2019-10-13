@@ -15,7 +15,7 @@ both players are required to pull __two new cards__ from their decks and place o
 face down in the playing field. Then the winner is determined by comparing the *new face up* cards.  
 The winner of the "War" then takes __all cards currently in play__. 
 #
-#My game
+# My game
 In my JavaScript code I replicate the game by creating a card deck and randomizing it.  
 The deck is then split between two players. Using a *switch* statement, the game switchs between  
 states; __drawingCards__ and __checkWinner__. During the __drawingCards__ state a __compareCards__  
