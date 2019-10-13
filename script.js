@@ -151,8 +151,9 @@ const beginWar = (originalp1card, originalp2card, state) => {
 		return state;
 	}
 
-	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
-	console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
+	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}    Player 2: ${p2card.rank} of ${p2card.suit}`)
+	console.log(`Player One Deck Size: ${gameState.playerOne.length}, 
+	 			Player Two Deck Size: ${gameState.playerTwo.length}`);
 	if (p1card.score > p2card.score){
 		console.log("WAR - Player One Wins!")
 		state.playerOne = state.playerOne.concat(state.spoilsOfWar);
@@ -185,8 +186,8 @@ const compareCards = (state) => {
 	let p1card = state.playerOne.shift();
 	let p2card = state.playerTwo.shift();
 
-	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
-	console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
+	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}   Player 2: ${p2card.rank} of ${p2card.suit}`)
+
 
 	//if playerOne wins
 	if(p1card.score > p2card.score){
@@ -213,57 +214,44 @@ let gameState = setupGame();
 /* 
 While game has no winner this while loop will run
 If case is draw initiate draw function
-if case is waiting initiate waiting function
+if case is checkingWinner check if there is a winner
 if there is a winner exit loop
 */
 
 let runs = 0;
 const MAX_RUNS = 10000;
-
+//while game has no winner and we have not hit max runs
 while(!gameState.winner && runs <= MAX_RUNS){
+	//check current state of game
 	switch(gameState.currentState){
-		 // call drawingCards function to remove the first
-		 // card from each players decks and
-		 // places it into the field of play
-		 // gameState = drawingCards(gameState);
-
 		 // Game phase
 		case 'drawingCards':
 			// console.log("Drawing cards");
 			gameState = compareCards(gameState);
+			//after comparing cards set game phase to check winner
 			gameState.currentState = 'checkWinner'
 			break;
 
 		// Checking winner phase
 	 	case 'checkWinner':
-	 		console.log(gameState.playerOne.length, gameState.playerTwo.length);
+	 		console.log(`Player One Deck Size: ${gameState.playerOne.length}, 
+	 			Player Two Deck Size: ${gameState.playerTwo.length}`);
 		 	if(gameState.playerOne.length === 0){
 		 		gameState.winner = 'Player Two';
 		 	} else if(gameState.playerTwo.length === 0){
 				gameState.winner = 'Player One';
 		 	} else {
+		 		//if there is no winner return to drawingCards
 		 		gameState.currentState = 'drawingCards'
 		 	}
 		 	break;
  	}
- 	console.log(runs);
+ 	// console.log(runs);
  	runs++;
  }
+
+ //if nobody wins after 10,000 games, end game.
 if(!gameState.winner){
 	window.alert(`After 10,000 games nobody wins!`)
 }else(window.alert(`${gameState.winner} wins!`))
 
-
-/* 
-The drawingCards state of the game will shift 1 card out of 
-both players arrays and into a new array cardsInPlay. 
-*/
-/*
-The cardsInPlay array will only ever hold two values:
-The card from Player1 and the card from Player2
- */
-/*
-Function compareCards will take an array as a parameter and
-compare the two cards. After the cards are compared either a winner
-is decided or War begins.
- */
