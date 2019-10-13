@@ -22,4 +22,4 @@ states; __drawingCards__ and __checkWinner__. During the __drawingCards__ state 
 function is called that compares a card from each player against eachother and determines a winner.  
 If there is a tie then war begins. In the __beginWar__ function the two previous cards in play  
 are added to a new array __spoilsOfWar__ that will hold all of the cards that the winner of *war* will take  whenever they win. __spoilsOfWar__ also holds two new cards from each players decks,  
-totaling *six* cards in the array. Then a card from each player is compared again to determine a winner.  If the is another tie, __war__ begins again until a winner is determined. 
+totaling *six* cards in the array. Then a card from each player is compared again to determine a winner.  If there is another tie, __war__ begins again until a winner is determined. 
