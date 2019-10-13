@@ -1,7 +1,16 @@
 # Tyler's Game of War
 For this project we were required to replicate the card game __War__ using __JavaScript__.
 
+## How to play "War"
 In the card game __War__, a main deck of 52 card is shuffled and then distributed evenly  
 between two players. Each player will start with __26__ cards. The game starts by  
 each player drawing the __first__ card from the top of their deck and placing it face up  
-next to the opposite players card. __Whoever has the card of the higher values wins.__
+next to the opposite players card. __Whoever has the card of the higher values wins.__  
+The winning player then takes both cards in play and places them at the bottom of their deck. 
+The game continues __until one player has all 52 cards.__
+#
+### When "War" is initiated
+In the game, __"War"__ begins when both players put down a card of equal value. When this happens  
+both players are required to pull __two new cards__ from their decks and place one face up and one  
+face down in the playing field. Then the winner is determined by comparing the new face up cards.  
+The winner of the "War" then takes __all cards currently in play__. 
