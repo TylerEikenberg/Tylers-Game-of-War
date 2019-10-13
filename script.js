@@ -124,39 +124,48 @@ const beginWar = (originalp1card, originalp2card, state) => {
 		...player2WarPile,
 	];
 
+	//check to see if card is not null
 	if(originalp1card){
 		state.spoilsOfWar.push(originalp1card);
 	}
-
+	//check to see if card is not null
 	if(originalp2card){
 		state.spoilsOfWar.push(originalp2card);
 	}
 
 
+	//p1card and p2card takes the second card of each players
+	//war pile which would be the one they place face up
 	let p1card = player1WarPile[player1WarPile.length - 1];
 	let p2card = player2WarPile[player2WarPile.length - 1];
 
 
+	//if p1card is null playerTwo automatically wins
 	if(!p1card){
 		state.winner = 'Player Two';
 		return state;
 	}
+	//if p2card is null playerOne automatically wins
 	if(!p2card){
 		state.winner = 'Player One';
 		return state;
 	}
+
+	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
+	console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
 	if (p1card.score > p2card.score){
 		console.log("WAR - Player One Wins!")
-		state.playerOne = state.playerOne.concat((state.playerOne.length -1), state.spoilsOfWar);
+		state.playerOne = state.playerOne.concat(state.spoilsOfWar);
 		state.spoilsOfWar = [];
 	//if playerTwo wins
 	} else if (p1card.score < p2card.score){
 		console.log("WAR - Player Two Wins")
-		state.playerTwo = state.playerTwo.concat((state.playerTwo.length -1), state.spoilsOfWar);
+		state.playerTwo = state.playerTwo.concat(state.spoilsOfWar);
 		state.spoilsOfWar = [];
 	//if there is a tie
 	} else if (p1card.score === p2card.score){
 		console.log("WAR - WAR AGAIN")
+		//make sure next war pulls new cards
 		state = beginWar(null, null, state);
 	}
 
@@ -176,8 +185,8 @@ const compareCards = (state) => {
 	let p1card = state.playerOne.shift();
 	let p2card = state.playerTwo.shift();
 
-	// console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
-	// console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
+	console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
+	console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
 
 	//if playerOne wins
 	if(p1card.score > p2card.score){
@@ -209,7 +218,7 @@ if there is a winner exit loop
 */
 
 let runs = 0;
-const MAX_RUNS = 1000;
+const MAX_RUNS = 10000;
 
 while(!gameState.winner && runs <= MAX_RUNS){
 	switch(gameState.currentState){
@@ -241,7 +250,7 @@ while(!gameState.winner && runs <= MAX_RUNS){
  	runs++;
  }
 if(!gameState.winner){
-	window.alert(`After 1,000 games nobody wins!`)
+	window.alert(`After 10,000 games nobody wins!`)
 }else(window.alert(`${gameState.winner} wins!`))
 
 
