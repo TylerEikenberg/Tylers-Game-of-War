@@ -4,24 +4,19 @@ This code will simulate
 the card game War in the console.
 *******************************************/
 
-
-/*The shuffleCards function takes an array and 
+/*The shuffleCards function takes an array of cards and 
 randomize the position of all the values within it. 
-@Param an array*/
-const shuffleCards = (array) => {
-	let currentIndex = array.length, temporaryValue, randomIndex;
-
+@Param an cards*/
+function shuffleCards(cards){
+	let currentIndex = cards.length, temporaryValue, randomIndex;
 	while (0 !== currentIndex){
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
-
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
+		temporaryValue = cards[currentIndex];
+		cards[currentIndex] = cards[randomIndex];
+		cards[randomIndex] = temporaryValue;
 	}
-	return array;
 }
-
 
 class Card {
 	constructor(suit, rank, score) {
@@ -39,15 +34,12 @@ class Deck{
 	constructor(){
 		this.length = 52;
 		this.cards = [];
-		this.draw = () => {
-       		return this.cards[Math.floor(Math.random() * Math.floor(52))]
-        }
         this.createDeck();
-
 	}
+
   createDeck(){
     let suit = ["hearts", "spades", "clubs", "diamonds"]
-		let rank = ["Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "King", "Queen", "Ace"]
+		let rank = ["Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
 		let score = [2,3,4,5,6,7,8,9,10,11,12,13,14]
     for(let i = 0, j = 0, k = 0; i < 52; i++){
       if(j === 13){
@@ -62,8 +54,6 @@ class Deck{
   }
 }
 
-let mainDeck = new Deck;
-
 /* 
 The setupGame function 
 returns an initial game state.
@@ -77,18 +67,19 @@ const setupGame = () => {
 	using the shuffleCard function 
 	passing the mainDeck as the parameter.
 	*/
-	console.log("Shuffling cards");
-	setTimeout(function(){
-         console.log(".")},1000);
-	setTimeout(function(){
-         console.log(".")},2000);
-	setTimeout(function(){
-         console.log(".")},3000);
+	// console.log("Shuffling cards");
+	// setTimeout(function(){
+ //         console.log(".")},1000);
+	// setTimeout(function(){
+ //         console.log(".")},2000);
+	// setTimeout(function(){
+ //         console.log(".")},3000);
 	//Shuffle mainDeck*******************
+	const mainDeck = new Deck();
 	shuffleCards(mainDeck.cards);
 
-	setTimeout(function(){
-         console.log("The cards have been shuffled")},4000);
+	// setTimeout(function(){
+ //         console.log("The cards have been shuffled")},4000);
 
 	
 
@@ -101,29 +92,68 @@ const setupGame = () => {
 		playerOne: mainDeck.cards.slice(0,26),
 		playerTwo: mainDeck.cards.slice(26,53),
 		currentState: 'drawingCards',
-		winner: null
+		winner: null,
+		warDrawAmount: 1,
+		spoilsOfWar: []
 	};
 
 }
 
-
-
-
-const beginWar = (state) => {
+const beginWar = (originalp1card, originalp2card, state) => {
 	/*	
 	 Create a new array spoilsOfWar that will hold previous cards
 	in play, and one new card from playerOne deck and playerTwo deck
 	*/	
 	
-	let spoilsOfWar = [];
-	spoilsOfWar.push(state.p1card, state.p2card);
-	spoilsOfWar.push(state.playerOne.shift(), state.playerTwo.shift());
+	const player1WarPile = state.playerOne.splice(0, state.warDrawAmount + 1);
+	const player2WarPile = state.playerTwo.splice(0, state.warDrawAmount + 1);
+	
+	state.spoilsOfWar = [
+		...state.spoilsOfWar,	 
+		...player2WarPile, 
+		...player1WarPile,
+	];
 
-	/*
-		Call compareCards() to then compare one new card pulled from
-		the decks of playerOne and playerTwo
-	 */
-	return compareCards(state);
+	if(originalp1card){
+		state.spoilsOfWar.push(originalp1card);
+	}
+
+	if(originalp2card){
+		state.spoilsOfWar.push(originalp2card);
+	}
+
+	// Random the spoils to avoid long runs
+	// shuffleCards(state.spoilsOfWar);
+
+	let p1card = player1WarPile[player1WarPile.length - 1];
+	let p2card = player2WarPile[player2WarPile.length - 1];
+
+
+	if(!p1card){
+		state.winner = 'Player Two';
+		return state;
+	}
+	if(!p2card){
+		state.winner = 'Player One';
+		return state;
+	}
+	if (p1card.score > p2card.score){
+		console.log("WAR - Player One Wins!")
+		state.playerOne = state.playerOne.concat(state.spoilsOfWar);
+		state.spoilsOfWar = [];
+	//if playerTwo wins
+	} else if (p1card.score < p2card.score){
+		console.log("WAR - Player Two Wins")
+		state.playerTwo = state.playerTwo.concat(state.spoilsOfWar);
+		state.spoilsOfWar = [];
+	//if there is a tie
+	} else if (p1card.score === p2card.score){
+		console.log("WAR - WAR AGAIN")
+		state = beginWar(null, null, state);
+	}
+
+
+	return state;
 }
 
 
@@ -135,35 +165,27 @@ const beginWar = (state) => {
 	into the winning players array of cards.
  */
 const compareCards = (state) => {
-let p1card = state.playerOne.shift();
-let p2card = state.playerTwo.shift();
-state.currentState = state;
-   // let p1card = new Card("Diamonds", "Two", 2)
-   // let p2card = new Card("Diamonds", "Two", 2)
-console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
+	let p1card = state.playerOne.shift();
+	let p2card = state.playerTwo.shift();
 
-console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
+	// console.log(`Player 1: ${p1card.rank} of ${p1card.suit}`)
+	// console.log(`Player 2: ${p2card.rank} of ${p2card.suit}`)
 
+	//if playerOne wins
+	if(p1card.score > p2card.score){
+		console.log("Player One Wins!")
+		state.playerOne.push(p1card, p2card);
+	//if playerTwo wins
+	} else if(p1card.score < p2card.score){
+		console.log("Player Two Wins")
+		state.playerTwo.push(p1card, p2card);
+	//if there is a tie
+	} else if (p1card.score === p2card.score){
+		console.log("War!")
+		state = beginWar(p1card, p2card, state);
+	}
 
-//if playerOne wins
-if(p1card.score > p2card.score){
-	console.log("Player One Wins!")
-	state.playerOne.push(p1card, p2card);
-	state.playerOne.push(state.beginWar.spoilsOfWar)
-	state.currentState = 'waiting';
-//if playerTwo wins
-}else if(p1card.score < p2card.score){
-	console.log("Player Two Wins")
-	state.playerTwo.push(p1card, p2card);
-	state.playerTwo.push(state.beginWar.spoilsOfWar)
-	state.currentState = 'waiting';
-//if there is a tie
-}else if (p1card.score === p2card.score){
-	console.log("War!")
-	beginWar(state);
-	state.currentState = 'waiting';
-}
-return state;
+	return state;
 }
 
 
@@ -178,8 +200,10 @@ if case is waiting initiate waiting function
 if there is a winner exit loop
 */
 
-let winner = null;
-while(!gameState.winner){
+let runs = 0;
+const MAX_RUNS = 10000;
+
+while(!gameState.winner && runs <= MAX_RUNS){
 	switch(gameState.currentState){
 		 // call drawingCards function to remove the first
 		 // card from each players decks and
@@ -188,44 +212,29 @@ while(!gameState.winner){
 
 		 // Game phase
 		case 'drawingCards':
-			console.log("Drawing cards");
-
-			compareCards(gameState);
-			gameState.currentState = 'waiting';
-		break;
-		 // call waiting function to wait for user to hit
-		 // enter key before drawing the next set of cards.
-		 
+			// console.log("Drawing cards");
+			gameState = compareCards(gameState);
+			gameState.currentState = 'checkWinner'
+			break;
 
 		// Checking winner phase
-	 	case 'waiting':
-/*		 show "Hit enter to continue"  
-	*/
-		 	if(gameState.playerOne.length === 0 || gameState.playerTwo.length === 0){
-		 		winner = true;
-		 		gameState.currentState = 'winner'
-		 	}else{
-			 winner = false;
-			 gameState.currentState = 'drawingCards'
-			}
-			 
-			 
-		 break;
-
-		 // Terminating condition
-		 case 'winner':
+	 	case 'checkWinner':
+	 		console.log(gameState.playerOne.length, gameState.playerTwo.length);
 		 	if(gameState.playerOne.length === 0){
-		 		gameState.winner = 'playerOne';
-		 	window.alert(`${gameState.playerTwo} wins!`)
-		 	}else if(gameState.playerTwo.length === 0){
-		 		gameState.winner = 'playerTwo';
-		 		window.alert(`${gameState.playerOne} wins!`)
+		 		gameState.winner = 'Player Two';
+		 	} else if(gameState.playerTwo.length === 0){
+				gameState.winner = 'Player One';
+		 	} else {
+		 		gameState.currentState = 'drawingCards'
 		 	}
-		 
-		 default:
-		 break;
+		 	break;
  	}
+ 	console.log(runs);
+ 	runs++;
  }
+if(!gameState.winner){
+	window.alert(`After 10,000 games nobody wins!`)
+}else(window.alert(`${gameState.winner} wins!`))
 
 
 /* 
